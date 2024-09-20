@@ -1,14 +1,23 @@
-const calculator = document.querySelector(".calculator");
-const resultBox = document.querySelector(".result_box")
-calculator.addEventListener("click", (e) => handleClick(e));
+const resultBox = document.querySelector(".result_box");
+const clearBtn = document.querySelector("#clear");
+const deleteBtn = document.querySelector("#delete");
+const numberBtns = document.querySelectorAll(".number");
+const operatorBtns = document.querySelectorAll(".operator");
+const equalsBtn = document.querySelector("#equals");
 
-function add(...args) {return args.reduce((accumulator, curr) => accumulator + curr);}
+clearBtn.addEventListener("click", () => clear());
+deleteBtn.addEventListener("click", () => deleteNumber());
+numberBtns.forEach((btn) => btn.addEventListener("click", () => inputNumber(btn)));
+operatorBtns.forEach((btn) => btn.addEventListener("click", () => setOperator(btn)));
+equalsBtn.addEventListener("click", () => evaluate());
 
-function subtract(...args) {return args.reduce((accumulator, curr) => accumulator - curr);}
+function add(n1, n2) {return n1 + n2;}
 
-function multiply(...args) {return args.reduce((accumulator, curr) => accumulator * curr);}
+function subtract(n1, n2) {return n1 - n2;}
 
-function divide(...args) {return args.reduce((accumulator, curr) => accumulator / curr);}
+function multiply(n1, n2) {return n1 * n2;}
+
+function divide(n1, n2) {return n1 / n2;}
 
 function operate(n1, n2, operator) {
     switch(operator) {
@@ -21,36 +30,46 @@ function operate(n1, n2, operator) {
         case "/":
             if (n2 == 0) return "MATH ERROR";
             return divide(n1, n2);
+        default:
+            return "MATH ERROR";
     }
 }
 
-function resetCalculator() {n1 = "", n2 = "", operator = null, result = null;}
+function clear() {
+    n1 = "", n2 = "", operator = null;
+    resultBox.textContent = 0;
+}
 
-function handleClick(event) {
-    button = event.target;
-    button_classList = button.classList;
-    if (button_classList.contains("number")) {
-        if (operator == null) {
-            n1 += button.id;
-            resultBox.textContent = n1;
-        } else {
-            n2 += button.id;
-            resultBox.textContent = n2;
-        }
-    } else if (button.id == "=") {
-        resultBox.textContent = String(operate(parseInt(n1), parseInt(n2), operator));
-        n1 = resultBox.textContent, n2 = "", operator = null, result = null;
-    } else if (button.id == "clear") {
-        n1 = "", n2 = "", operator = null, result = null;
-        resultBox.textContent = 0;
-    } else if (button_classList.contains("operator")) {
-        if (operator != null) {
-            resultBox.textContent = String(operate(parseInt(n1), parseInt(n2), operator));
-            n1 = resultBox.textContent, n2 = "", result = null
-        }
-        operator = button.id;
-        console.log(n1, operator);
+function deleteNumber() {
+    if (resultBox.textContent == n1) {
+        n1 = n1.substring(0, n1.length - 1);
+    } else if (resultBox.textContent == n2) {
+        n2 = n2.substring(0, n2.length - 1);
     }
+    resultBox.textContent = resultBox.textContent.substring(0, resultBox.textContent.length - 1);
+}
+
+function inputNumber(button) {
+    if (operator == null) {
+        n1 += button.id;
+        resultBox.textContent = n1;
+    } else {
+        n2 += button.id;
+        resultBox.textContent = n2;
+    }
+}
+
+function setOperator(button) {
+    if (operator != null && n2 != "") {
+        resultBox.textContent = String(operate(parseInt(n1), parseInt(n2), operator));
+        n1 = resultBox.textContent, n2 = "", result = null
+    }
+    operator = button.id;
+}
+
+function evaluate() {
+    if (operator != null) resultBox.textContent = String(operate(parseInt(n1), parseInt(n2), operator));
+    n1 = resultBox.textContent, n2 = "", operator = null;
 }
 
 let n1 = "", n2 = "", operator = null;
