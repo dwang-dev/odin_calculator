@@ -20,7 +20,12 @@ function subtract(n1, n2) {return n1 - n2;}
 
 function multiply(n1, n2) {return n1 * n2;}
 
-function divide(n1, n2) {return n1 / n2;}
+function divide(n1, n2) {
+    if (n2 == 0) {
+        return "MATH ERROR";
+    }
+    return n1 / n2;
+}
 
 function operate(n1, n2, operator) {
     switch(operator) {
@@ -31,7 +36,6 @@ function operate(n1, n2, operator) {
         case "*":
             return multiply(n1, n2);
         case "/":
-            if (n2 == 0) return "MATH ERROR";
             return divide(n1, n2);
         default:
             return "MATH ERROR";
@@ -55,11 +59,11 @@ function deleteNumber() {
 
 function inputNumber(button) {
     if (operator == null) {
-        n1 += button.innerHTML;
-        resultBox.textContent = n1;
+        n1 += button.innerHTML; 
+        resultBox.textContent = button.textContent;
     } else {
-        n2 += button.innerHTML;
-        resultBox.textContent = n2;
+        n2 += button.innerHTML; 
+        resultBox.textContent = button.textContent;
     }
 }
 
@@ -80,5 +84,3 @@ function evaluate() {
     expressionBox.textContent += (n2 + " =");
     n1 = result, n2 = "", operator = null;
 }
-
-let n1 = "", n2 = "", operator = null;
