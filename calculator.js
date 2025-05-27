@@ -14,15 +14,21 @@ operatorBtns.forEach((btn) => btn.addEventListener("click", () => setOperator(bt
 equalsBtn.addEventListener("click", () => evaluate());
 dotBtn.addEventListener("click", () => inputNumber(dotBtn));
 
-let n1 = "", n2 = "", operator = null;
+let n1 = "", n2 = "", operator = null
 
-function add(n1, n2) {return n1 + n2;}
+function add(n1, n2) {return parseFloat((n1 + n2).toFixed(2));}
 
-function subtract(n1, n2) {return n1 - n2;}
+function subtract(n1, n2) {return parseFloat((n1 - n2).toFixed(2));}
 
-function multiply(n1, n2) {return n1 * n2;}
+function multiply(n1, n2) {return parseFloat((n1 * n2).toFixed(2));}
 
-function divide(n1, n2) {return n1 / n2;}
+function divide(n1, n2) {
+    if (n2 == 0) {
+        return "MATH ERROR";
+    } else {
+        return (n1 / n2).toFixed(2);
+    }
+}
 
 function operate(n1, n2, operator) {
     switch(operator) {
@@ -30,10 +36,9 @@ function operate(n1, n2, operator) {
             return add(n1, n2);
         case "-":
             return subtract(n1, n2);
-        case "*":
+        case "x":
             return multiply(n1, n2);
-        case "/":
-            if (n2 == 0) return "MATH ERROR";
+        case "÷":
             return divide(n1, n2);
         default:
             return "MATH ERROR";
@@ -41,44 +46,43 @@ function operate(n1, n2, operator) {
 }
 
 function clear() {
-    n1 = "", n2 = "", operator = null;
+    n1 = "";
+    n2 = "";
+    operator = null;
     resultBox.textContent = 0;
     expressionBox.textContent = "";
 }
 
 function deleteNumber() {
-    if (resultBox.textContent == n1) {
-        n1 = n1.substring(0, n1.length - 1);
-    } else if (resultBox.textContent == n2) {
-        n2 = n2.substring(0, n2.length - 1);
-    }
-    resultBox.textContent = resultBox.textContent.substring(0, resultBox.textContent.length - 1);
+    resultBox.textContent = resultBox.textContent?.slice(0, -1);
 }
 
 function inputNumber(button) {
-    if (operator == null) {
-        n1 += button.innerHTML;
-        resultBox.textContent = n1;
+    if (resultBox.textContent == "0" || (operator != null && resultBox.textContent == n1)) {
+        resultBox.textContent = button.textContent;
     } else {
-        n2 += button.innerHTML;
-        resultBox.textContent = n2;
+        resultBox.textContent += button.textContent;
     }
 }
 
 function setOperator(button) {
-    if (operator != null && n2 != "") {
-        let result = String(operate(parseInt(n1), parseInt(n2), operator));
-        resultBox.textContent = result;
-        n1 = result, n2 = "";
+    if (!n1) {
+        n1 = resultBox.textContent;
     }
-    operator = button.id;
-    expressionBox.textContent = `${n1} ${button.innerHTML} `;
+    if (operator != null) {
+        evaluate()
+    }
+    operator = button.textContent;
+    expressionBox.textContent = `${n1} ${operator}`;
 }
 
 function evaluate() {
-    if (operator == null) return;
-    let result = String(operate(parseInt(n1), parseInt(n2), operator));
+    n2 = resultBox.textContent;
+    if (operator == null || !n1 || !n2) {
+        return;
+    }
+    let result = String(operate(parseFloat(n1), parseFloat(n2), operator));
     resultBox.textContent = result;
-    expressionBox.textContent += (n2 + " =");
+    expressionBox.textContent += ` ${n2} = `;
     n1 = result, n2 = "", operator = null;
 }
