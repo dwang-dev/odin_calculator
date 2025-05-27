@@ -53,6 +53,7 @@
     border: 2px solid gray;
     margin-bottom: 10px;
     padding: 5px;
+    border-radius: 10px;
 }
 
 #expressionBox {
@@ -79,6 +80,7 @@
     background-color: black;
     border: 2px solid white;
     color: white;
+    border-radius: 10px;
 }
 
 .pageFooter {
